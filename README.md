@@ -3,7 +3,7 @@
 This is a [Seinfeld Calendar](https://lifehacker.com/jerry-seinfelds-productivity-secret-281626) I made.
 I made my own version in Golang. It produces a PDF using the [draw2d](https://github.com/llgcode/draw2d) library.
 
-It has 2 improvements I wanted, that I couldn't find on the web:
+It has 2 improvements I wanted that I couldn't find on the web:
 
 - ability to set start date yourself (ie. day 1 = Aug 2 2021)
 - include weekday, day of the month, and name of month
