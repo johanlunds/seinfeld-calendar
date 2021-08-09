@@ -10,6 +10,8 @@ It has 2 improvements I wanted, that I couldn't find on the web:
 
 It uses the [Inter font family](https://rsms.me/inter/).
 
+[Here's another good article explaining Seinfeld Calendars.](https://jamesclear.com/stop-procrastinating-seinfeld-strategy)
+
 ## How to run
 
 ```sh
