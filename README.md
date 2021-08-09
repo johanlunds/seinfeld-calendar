@@ -8,9 +8,9 @@ It has 2 improvements I wanted that I couldn't find on the web:
 - ability to set start date yourself (ie. day 1 = Aug 2 2021)
 - include weekday, day of the month, and name of month
 
-It uses the [Inter font family](https://rsms.me/inter/).
-
 [Here's another good article explaining Seinfeld Calendars.](https://jamesclear.com/stop-procrastinating-seinfeld-strategy)
+
+It uses the [Inter font family](https://rsms.me/inter/).
 
 ## How to run
 
