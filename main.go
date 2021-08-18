@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"image/color"
 	"math"
+	"net/http"
 	"os"
 	"time"
 
+	"github.com/jung-kurt/gofpdf"
 	"github.com/llgcode/draw2d"
 	"github.com/llgcode/draw2d/draw2dpdf"
 )
@@ -30,7 +32,7 @@ const BOX_H = (END_Y - START_Y) / float64(ROWS)
 const BOX_HALF_H = BOX_H / 2
 const BOX_HALF_W = BOX_W / 2
 
-func main() {
+func generatePdf() (*gofpdf.Fpdf, error) {
 	draw2d.SetFontFolder("./resource/font/")
 
 	// Initialize the graphic context on an RGBA image
@@ -40,8 +42,7 @@ func main() {
 	calStartTimeStr := "2021-08-02T00:00:00Z" // set this to whatever you want...
 	calStartTime, err := time.Parse(time.RFC3339, calStartTimeStr)
 	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(1)
+		return nil, err
 	}
 
 	//interFontMedium := draw2d.FontData{Name: "Inter-Medium", Family: draw2d.FontFamilySans, Style: draw2d.FontStyleNormal}
@@ -146,14 +147,37 @@ func main() {
 
 	gc.Restore()
 
-	// Save to file
-	fmt.Println("Saving file...")
-	err = draw2dpdf.SaveToPdfFile("./output/calendar.pdf", dest)
+	return dest, nil
+}
+
+func handlePdf(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Handling request...")
+
+	result, err := generatePdf()
 
 	if err != nil {
 		fmt.Println("Error:", err)
-		os.Exit(1)
+		http.Error(w, "Something went wrong.", 500)
+		return
 	}
 
-	fmt.Println("Done!")
+	w.Header().Set("Content-Type", "application/pdf")
+	w.Header().Set("Content-Disposition", "inline; filename=\"calendar.pdf\"")
+
+	err = result.Output(w)
+
+	if err != nil {
+		fmt.Println("Error:", err)
+		http.Error(w, "Something went wrong.", 500)
+		return
+	}
+}
+
+func main() {
+	port := "3000"
+	if os.Getenv("PORT") != "" {
+		port = os.Getenv("PORT")
+	}
+	http.HandleFunc("/pdf", handlePdf)
+	http.ListenAndServe(":"+port, nil)
 }

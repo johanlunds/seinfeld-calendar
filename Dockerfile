@@ -6,4 +6,8 @@ COPY . .
 RUN go get -d -v ./...
 RUN go install -v ./...
 
+# Run container as non-root
+RUN adduser -D myuser
+USER myuser
+
 CMD ["seinfeld-calendar"]
