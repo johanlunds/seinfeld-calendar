@@ -16,7 +16,7 @@ It uses the [Inter font family](https://rsms.me/inter/).
 
 ```sh
 make
-open output/calendar.pdf
+open http://localhost:3000/pdf
 ```
 
 ## Example output

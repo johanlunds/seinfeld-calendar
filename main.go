@@ -32,18 +32,12 @@ const BOX_H = (END_Y - START_Y) / float64(ROWS)
 const BOX_HALF_H = BOX_H / 2
 const BOX_HALF_W = BOX_W / 2
 
-func generatePdf() (*gofpdf.Fpdf, error) {
+func generatePdf(calStartTime time.Time) (*gofpdf.Fpdf, error) {
 	draw2d.SetFontFolder("./resource/font/")
 
 	// Initialize the graphic context on an RGBA image
 	dest := draw2dpdf.NewPdf("P", "mm", "A4")
 	gc := draw2dpdf.NewGraphicContext(dest)
-
-	calStartTimeStr := "2021-08-02T00:00:00Z" // set this to whatever you want...
-	calStartTime, err := time.Parse(time.RFC3339, calStartTimeStr)
-	if err != nil {
-		return nil, err
-	}
 
 	//interFontMedium := draw2d.FontData{Name: "Inter-Medium", Family: draw2d.FontFamilySans, Style: draw2d.FontStyleNormal}
 	interFontSemiBold := draw2d.FontData{Name: "Inter-SemiBold", Family: draw2d.FontFamilySans, Style: draw2d.FontStyleNormal}
@@ -153,11 +147,21 @@ func generatePdf() (*gofpdf.Fpdf, error) {
 func handlePdf(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Handling request...")
 
-	result, err := generatePdf()
+	startParam := time.Now().Format("2006-01-02")
+	if r.URL.Query().Get("start") != "" {
+		startParam = r.URL.Query().Get("start")
+	}
+	calStartTime, err := time.Parse("2006-01-02", startParam)
 
 	if err != nil {
-		fmt.Println("Error:", err)
-		http.Error(w, "Something went wrong.", 500)
+		handleHttpError(w, err)
+		return
+	}
+
+	result, err := generatePdf(calStartTime)
+
+	if err != nil {
+		handleHttpError(w, err)
 		return
 	}
 
@@ -167,10 +171,14 @@ func handlePdf(w http.ResponseWriter, r *http.Request) {
 	err = result.Output(w)
 
 	if err != nil {
-		fmt.Println("Error:", err)
-		http.Error(w, "Something went wrong.", 500)
+		handleHttpError(w, err)
 		return
 	}
+}
+
+func handleHttpError(w http.ResponseWriter, err error) {
+	fmt.Println("Error:", err)
+	http.Error(w, "Something went wrong.", 500)
 }
 
 func main() {
