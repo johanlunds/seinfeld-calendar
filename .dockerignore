@@ -1,2 +1,8 @@
+# Build artefacts
 /seinfeld-calendar
 /output/*
+
+# Unnecessary files
+/reference/*
+.git/
+**/.DS_Store
