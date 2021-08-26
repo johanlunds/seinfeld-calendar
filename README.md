@@ -1,5 +1,7 @@
 # Seinfeld Calendar
 
+URL: https://seinfeldcalendar.herokuapp.com/pdf (to change start date add `?start=2021-01-01`)
+
 This is a [Seinfeld Calendar](https://lifehacker.com/jerry-seinfelds-productivity-secret-281626) I made.
 I made my own version in Golang. It produces a PDF using the [draw2d](https://github.com/llgcode/draw2d) library.
 
